@@ -1,30 +1,53 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <Layout>
+    <Header />
+    <ProductsPage />
+  </Layout>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Layout from './components/Layout';
+import Header from './components/Header';
+import ProductsPage from './pages/ProductsPage'
 
-#nav {
-  padding: 30px;
-
-  a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+export default {
+  components: {
+    Layout,
+    Header,
+    ProductsPage
   }
 }
+</script>
+
+<style lang="scss">
+  @import "./assets/scss/variables";
+
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+  * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+  }
+
+  body {
+    background-color: $bg-color-app;
+    color: $font-color;
+    font-family: $font-stack;
+  }
+
+  a {
+      text-decoration: none;
+      color: inherit;
+      background-color: transparent;
+  }
+
+  button,
+  input {
+    font-family: inherit; 
+  }
+
+  input:focus{
+    outline: none;
+  }
 </style>

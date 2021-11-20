@@ -1,0 +1,177 @@
+<template>
+    <nav class="page-navigation" v-if="totalPages > 0">
+        <a 
+            class="page-navigation__page-link" 
+            id="prev-page">
+        </a>
+        <ul class="page-navigation__list">
+            <li class="page-navigation__item"
+                v-for="(item, index) of counter(totalPages)"
+                :class="getClass(index)"
+                :key="index">
+                <a 
+                    class="page-navigation__page-link">
+                    {{index + 1}}
+                </a>
+            </li>
+        </ul>
+        <a 
+            class="page-navigation__page-link" 
+            id="next-page">
+        </a>
+    </nav>
+</template>
+
+<script>
+export default {
+    props: {
+        page: {
+            type: Number,
+            default: 0
+        },
+        totalPages: {
+            type: Number,
+            default: 0
+        }
+    },
+    methods: {
+        counter (i) {
+            return new Array(i);
+        },
+        getClass (i) {
+            const base = 'page-navigation__item_';
+            const modificator = i === this.page - 1? 'current':
+                                i === this.page - 2? 'prev':
+                                i === this.page? 'next': '';
+            return modificator? base + modificator : ''; 
+        }
+    }
+}
+</script>
+
+<style lang="scss">
+    @use "sass:map";
+    @use "../assets/scss/variables" as *;
+    @use "../assets/scss/mixins" as *;
+    @use "../assets/scss/media-mixins" as *;
+
+    .page-navigation {
+        display: flex;
+        justify-content: center;
+        @include text(21px);
+        letter-spacing: 4px;
+        color: $font-color;
+        margin: 2vh auto 0 auto;
+
+        &__page-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+            cursor: pointer;
+        }
+
+        &__list {
+            display: flex;
+            list-style: none;
+            justify-content: space-between;
+            align-items: center;
+            background-color: $secondary-color;
+            border-radius: 20px;
+
+            @include mobile {
+                width: 50%;
+            }
+        }
+
+        &__item {
+            &_current {
+                display: block;
+                background: $primary-color;
+                color: $primary-font-color;
+                @include box(40px);
+                border-radius: 50%;
+                padding: 10px 0 10px 2px;
+                text-align: center;
+
+                .page-navigation__page-link {
+                    @extend %disabled-link;
+                }
+
+            }
+
+            &:first-child {
+                padding-left: 19px;
+                
+                &.page-navigation__item_current {
+                    padding-left: 2px;
+                }
+            }
+
+            &:last-child {
+                padding-right: 14px;
+
+                &.page-navigation__item_current {
+                    padding-right: 0;
+                }
+            }
+
+            @include tablet {
+                display: none;
+
+            
+                &:first-child,
+                &:last-child,
+                &_current,
+                &_next,
+                &_prev {
+                    display: unset;
+                }
+            }
+
+            @include mobile {
+                &_next,
+                &_prev {
+                    display: none;
+                }
+            }
+
+        }
+    }
+
+    .page-navigation__item + .page-navigation__item {
+        margin-left: 15px;
+    }
+
+    #prev-page {
+        margin-right: 20px;
+    }
+
+    #next-page {
+        margin-left: 20px;
+    }
+
+    #prev-page,
+    #next-page {
+        @include box(40px);
+        background: $secondary-color;
+        border-radius: 50%;
+
+        &:before {
+            @include pseudo(7px);
+            top: 8px;
+            left: 15px;
+        }
+    }
+
+    #prev-page:before {
+        border-left: 2px solid $font-color;
+        border-top: 2px solid $font-color;
+        transform: rotate(-45deg);
+    }
+
+    #next-page:before {
+        border-right: 2px solid $font-color;
+        border-top: 2px solid $font-color;
+        transform: rotate(45deg);
+    }
+</style>
