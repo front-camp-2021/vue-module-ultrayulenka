@@ -1,14 +1,15 @@
 <template>
-    <ul className="cards-list">
-        {{!products.length? 'No producst found' : ''}}
-        <template v-if="products.length">
-            <Card 
-                class="cards-list__item"
-                v-for="product in products"
-                v-bind="product"
-                :key="product.id"/>
-        </template>
-    </ul>
+  <ul className="cards-list">
+    {{ !products.length? 'No producst found' : '' }}
+    <template v-if="products.length">
+      <Card 
+        v-for="product in products"
+        v-bind="product"
+        :key="product.id"
+        class="cards-list__item"
+      />
+    </template>
+  </ul>
 </template>
 
 <script>

@@ -1,11 +1,12 @@
 <template>
-    <div>
-        <Search />
-        <CardList :products="products" />
-        <Pagination
-            :page="3"
-            :totalPages="10"/>
-    </div>
+  <div>
+    <Search />
+    <CardList :products="products" />
+    <Pagination
+      :page="page"
+      :total-pages="totalPages"
+    />
+  </div>
 </template>
 
 <script>
@@ -19,6 +20,23 @@ export default {
         CardList,
         Search,
         Pagination
+    },
+    props: {
+        searchQuery: {
+            type: String,
+            default: ''
+        },
+        page: {
+            type: Number,
+            default: 1,
+            validator: function(value) {
+                return value > 0;
+            }
+        },
+        totalPages: {
+            type: Number,
+            required: true
+        }
     },
     data() {
         return {

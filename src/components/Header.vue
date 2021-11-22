@@ -1,29 +1,40 @@
 <template>
-    <header class="header">
-        <div class="logo-container">
-            <div class="logo-container__item">
-                <div class="logo">
-                    <a href="#" class="link"> 
-                        <img class="logo__icon" src="../assets/images/logo.svg" alt="">
-                    </a>
-                </div>
-                <h1 class="title">
-                    <a href="#" class="link">
-                        Online Store
-                    </a>
-                </h1>
-            </div>
-            <div class="logo-container__item">
-                <Button :size="'small'">
-                    <img 
-                        class="button__icon" 
-                        src="../assets/images/shopping-bag-dark.svg"
-                        alt="Visit cart page">
-                </Button>
-            </div>
+  <header class="header">
+    <div class="logo-container">
+      <div class="logo-container__item">
+        <div class="logo">
+          <a
+            href="#"
+            class="link"
+          > 
+            <img
+              class="logo__icon"
+              src="../assets/images/logo.svg"
+              alt=""
+            >
+          </a>
         </div>
-        <Navigation />
-    </header>
+        <h1 class="title">
+          <a
+            href="#"
+            class="link"
+          >
+            Online Store
+          </a>
+        </h1>
+      </div>
+      <div class="logo-container__item">
+        <Button :size="'small'">
+          <img 
+            class="button__icon" 
+            src="../assets/images/shopping-bag-dark.svg"
+            alt="Visit cart page"
+          >
+        </Button>
+      </div>
+    </div>
+    <Navigation />
+  </header>
 </template>
 
 <script>

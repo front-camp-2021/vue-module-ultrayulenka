@@ -1,25 +1,36 @@
 <template>
-    <nav class="page-navigation" v-if="totalPages > 0">
+  <nav
+    v-if="totalPages > 0"
+    class="page-navigation"
+  >
+    <a 
+      id="prev-page" 
+      class="page-navigation__page-link"
+      :disabled="page <= 1"
+      @click="goToPage(page - 1)"
+    />
+    <ul class="page-navigation__list">
+      <li
+        v-for="(item, index) of counter(totalPages)"
+        :key="index"
+        class="page-navigation__item"
+        :class="getClass(index)"
+      >
         <a 
-            class="page-navigation__page-link" 
-            id="prev-page">
+          class="page-navigation__page-link"
+          @click="goToPage(index + 1)"
+        >
+          {{ index + 1 }}
         </a>
-        <ul class="page-navigation__list">
-            <li class="page-navigation__item"
-                v-for="(item, index) of counter(totalPages)"
-                :class="getClass(index)"
-                :key="index">
-                <a 
-                    class="page-navigation__page-link">
-                    {{index + 1}}
-                </a>
-            </li>
-        </ul>
-        <a 
-            class="page-navigation__page-link" 
-            id="next-page">
-        </a>
-    </nav>
+      </li>
+    </ul>
+    <a 
+      id="next-page" 
+      class="page-navigation__page-link"
+      :disabled="page >= totalPages"
+      @click="goToPage(page + 1)"
+    />
+  </nav>
 </template>
 
 <script>
@@ -35,15 +46,18 @@ export default {
         }
     },
     methods: {
-        counter (i) {
+        counter(i) {
             return new Array(i);
         },
-        getClass (i) {
+        getClass(i) {
             const base = 'page-navigation__item_';
             const modificator = i === this.page - 1? 'current':
                                 i === this.page - 2? 'prev':
                                 i === this.page? 'next': '';
             return modificator? base + modificator : ''; 
+        },
+        goToPage(index) {
+            this.$emit('page-changed', index);
         }
     }
 }

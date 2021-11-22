@@ -1,41 +1,68 @@
 <template>
-    <li class="card">
-        <div class="card__inner">
-            <template v-if="images.length">
-                <div class="card__image">
-                    <a href="#" class="card__link">
-                        <img :src="images[0]" :alt="title">
-                    </a>
-                </div>
-            </template>
-            <div class="card__content">
-                <div class="card__details">
-                    <div class="rating">
-                        <span class="rating__value">{{rating}}</span>
-                        <div class="rating__icon">
-                            <img class="rating__icon" src="../assets/images/star.svg" alt="star">
-                        </div>
-                    </div>
-                    <span class="card__price">{{price}}</span>
-                </div>
-                <h2 class="card__title"><a href="#" class="card__link">{{title}}</a></h2>
-                <p class="card__description">Redesigned from scratch and completely revised.</p>
+  <li class="card">
+    <div class="card__inner">
+      <template v-if="images.length">
+        <div class="card__image">
+          <a
+            href="#"
+            class="card__link"
+          >
+            <img
+              :src="images[0]"
+              :alt="title"
+            >
+          </a>
+        </div>
+      </template>
+      <div class="card__content">
+        <div class="card__details">
+          <div class="rating">
+            <span class="rating__value">{{ rating }}</span>
+            <div class="rating__icon">
+              <img
+                class="rating__icon"
+                src="../assets/images/star.svg"
+                alt="star"
+              >
             </div>
+          </div>
+          <span class="card__price">{{ price }}</span>
         </div>
-        <div class="card__button-group">
-            <Button 
-                :className="'card__button'">
-                <img class="button__icon" src="../assets/images/heart-black.svg" alt="heart">
-                <span class="button__text">{{inWishlist? "remove from" : "add to"}} wishlist</span>
-            </Button>
-            <Button
-                :className="'card__button'"
-                :color="'primary'">
-                <img class="button__icon" src="../assets/images/shopping-bag.svg" alt="shopping bag">
-                <span class="button__text">add {{inCart? "more" : ""}} to cart</span>
-            </Button>
-        </div>
-    </li>
+        <h2 class="card__title">
+          <a
+            href="#"
+            class="card__link"
+          >{{ title }}</a>
+        </h2>
+        <p class="card__description">
+          Redesigned from scratch and completely revised.
+        </p>
+      </div>
+    </div>
+    <div class="card__button-group">
+      <Button 
+        :class-name="'card__button'"
+      >
+        <img
+          class="button__icon"
+          src="../assets/images/heart-black.svg"
+          alt="heart"
+        >
+        <span class="button__text">{{ inWishlist? "remove from" : "add to" }} wishlist</span>
+      </Button>
+      <Button
+        :class-name="'card__button'"
+        :color="'primary'"
+      >
+        <img
+          class="button__icon"
+          src="../assets/images/shopping-bag.svg"
+          alt="shopping bag"
+        >
+        <span class="button__text">add {{ inCart? "more" : "" }} to cart</span>
+      </Button>
+    </div>
+  </li>
 </template>
 
 <script>

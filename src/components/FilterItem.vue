@@ -1,16 +1,22 @@
 <template>
-    <li class="options-list__item">
-        <div>
-            <input class="options-list__input" type="checkbox" 
-                :id="value"
-                :name="title"
-                :value="value"
-                :checked="checked"
-                :disabled="!value"
-                @change="changeCheckedStatus"/>
-            <label class="options-list__label" :for="value">{{title? title : 'No title'}}</label>
-        </div>
-    </li>
+  <li class="options-list__item">
+    <div>
+      <input
+        :id="value"
+        class="options-list__input" 
+        type="checkbox"
+        :name="title"
+        :value="value"
+        :checked="checked"
+        :disabled="!value"
+        @change="onClick"
+      >
+      <label
+        class="options-list__label"
+        :for="value"
+      >{{ title? title : 'No title' }}</label>
+    </div>
+  </li>
 </template>
 
 <script>
@@ -30,8 +36,8 @@ export default {
         }
     },
     methods: {
-        changeCheckedStatus() {
-            this.$emit('changeCheckedStatus', this.value);
+        onClick() {
+            this.$emit('filter-clicked', this.value, this.checked);
         }
     }
 }

@@ -1,30 +1,36 @@
 <template>
-    <div class="heading">
-        <div :class="`heading__sidebar ${isSidebarOpen? 'heading__sidebar_open' : 'heading__sidebar_closed'}`">
-            <h3 class="section-title">
-                Filters
-            </h3>
-            <Button
-                :size="'small'"
-                :className="'heading__show-sidebar-btn'"
-                @click="onShowSidebarClick">
-                <div
-                    :class="`arrows arrows_${isSidebarOpen? 'left' : 'right'}`">
-                </div>
-                <div
-                    :class="`arrows arrows_${isSidebarOpen? 'up' : 'down'}`">
-                </div>
-            </Button>
-        </div>
-        <div :class="`heading__products ${isSidebarOpen? 'heading__products_open' : 'heading__products_closed'}`">
-            <span class="total">{{totalProducts}} results found</span>
-            <Button 
-                :size="'small'"
-                :color="'primary'">
-                <img class="button__icon" src="../assets/images/heart-white.svg" alt="Go to wishlist"/>
-            </Button>
-        </div>
+  <div class="heading">
+    <div :class="`heading__sidebar ${isSidebarOpen? 'heading__sidebar_open' : 'heading__sidebar_closed'}`">
+      <h3 class="section-title">
+        Filters
+      </h3>
+      <Button
+        :size="'small'"
+        :class-name="'heading__show-sidebar-btn'"
+        @click="onShowSidebarClick"
+      >
+        <div
+          :class="`arrows arrows_${isSidebarOpen? 'left' : 'right'}`"
+        />
+        <div
+          :class="`arrows arrows_${isSidebarOpen? 'up' : 'down'}`"
+        />
+      </Button>
     </div>
+    <div :class="`heading__products ${isSidebarOpen? 'heading__products_open' : 'heading__products_closed'}`">
+      <span class="total">{{ totalProducts }} results found</span>
+      <Button 
+        :size="'small'"
+        :color="'primary'"
+      >
+        <img
+          class="button__icon"
+          src="../assets/images/heart-white.svg"
+          alt="Go to wishlist"
+        >
+      </Button>
+    </div>
+  </div>
 </template>
 
 <script>

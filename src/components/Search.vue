@@ -1,15 +1,25 @@
 <template>
-    <div class="search">
-        <form class="searchbar">
-            <input class="searchbar__input" 
-                    type="text" 
-                    placeholder="Search"
-                    :value="value"/>
-            <button class="search-button" type="submit">
-                <img class="searchbar__icon" src="../assets/images/search.svg" alt="Search"/>
-            </button>
-        </form>
-    </div>
+  <div class="search">
+    <form class="searchbar">
+      <input
+        class="searchbar__input" 
+        type="text" 
+        placeholder="Search"
+        :value="value"
+        @keyup="$emit('search-changed', $event.target.value)"
+      >
+      <button
+        class="search-button"
+        type="submit"
+      >
+        <img
+          class="searchbar__icon"
+          src="../assets/images/search.svg"
+          alt="Search"
+        >
+      </button>
+    </form>
+  </div>
 </template>
 
 <script>

@@ -1,37 +1,143 @@
 <template>
-    <div>
-        <ProductsPageHeader 
-            :isSidebarOpen="isSidebarOpen"
-            :totalProducts="0"
-            @changeSidebarOpenStatus="onSidebarShownClick"/>
-        <div class="content">
-            <FilterContainer v-if="isSidebarOpen" />
-            <div :class="isSidebarOpen? 'main' : 'main_full-width'">
-                <MainContainer />
-            </div>
-        </div>
+  <div>
+    <ProductsPageHeader 
+      :is-sidebar-open="isSidebarOpen"
+      :total-products="totalFound"
+      @changeSidebarOpenStatus="onSidebarShownClick"
+    />
+    <div class="content">
+      <FilterContainer 
+        v-if="isSidebarOpen"
+        :selected-filters="selectedFilters"
+        :selected-ranges="selectedRanges"
+        @add-filter="onAddFilter"
+        @remove-filter="onRemoveFilter"
+        @range-changed="onRangeChanged"
+        @reset-filters="resetFilters"
+      />
+      <div :class="isSidebarOpen? 'main' : 'main_full-width'">
+        <Search 
+          :value="searchQuery"
+          @search-changed="onSearchChange"
+        />
+        <CardList 
+          :products="products" 
+        />
+        <Pagination
+          :page="page"
+          :total-pages="totalPages"
+          @page-changed="onPageChange"
+        />
+      </div>
     </div>
+  </div>
 </template>
 
 <script>
 import ProductsPageHeader from '../components/ProductsPageHeader';
 import FilterContainer from '../containers/FilterContainer';
-import MainContainer from '../containers/MainContainer';
+import CardList from '../components/CardList';
+import Search from '../components/Search';
+import Pagination from '../components/Pagination';
+
+import { fetchFilteredProducts } from '../api';
 
 export default {
     components: {
         ProductsPageHeader,
         FilterContainer,
-        MainContainer
+        CardList,
+        Search,
+        Pagination
     },
     data() {
         return {
-            isSidebarOpen: false
+            isSidebarOpen: false,
+            products: [],
+            totalFound: 100,
+            selectedFilters: [],
+            selectedRanges: [],
+            searchQuery: '',
+            page: 1,
+            totalPages: 10,
+            pageLimit: 9
         }
+    },
+    computed: {
+        paramsChanged: function() {
+            return [...this.selectedFilters, ...this.selectedRanges];
+        }
+    },
+    watch: {
+        paramsChanged: function() {
+            this.page = 1;
+            this.getProducts();
+        },
+        page: function() {
+            this.getProducts();
+        },
+        searchQuery: function() {
+            this.page = 1;
+            this.getProducts();
+        }
+    },
+    created() {
+        this.getProducts();
     },
     methods: {
         onSidebarShownClick() {
             this.isSidebarOpen = !this.isSidebarOpen;
+        },
+        onAddFilter(value) {
+            this.selectedFilters.push(value);
+            console.log(this.selectedFilters);
+        },
+        onRemoveFilter(value) {
+            const index = this.selectedFilters.indexOf(value);
+            if(index > -1) {
+                this.selectedFilters.splice(index, 1);
+            }
+            console.log(this.selectedFilters);
+        },
+        onRangeChanged(title, selected) {
+            const index = this.selectedRanges.findIndex(range => range.title === title);
+            if(index > -1) {
+                this.selectedRanges.splice(index, 1, {title, selected})
+            } else {
+                this.selectedRanges.push({title, selected});
+            }
+        },
+        onSearchChange(value) {
+            if(value.trim()) {
+                this.searchQuery = value.trim();
+            } else {
+                this.searchQuery = '';
+            }
+            console.log(this.searchQuery);
+        },
+        onPageChange(index) {
+            if(index > 0 && index <= this.totalPages) {
+                this.page = index;
+            }
+        },
+        resetFilters() {
+            this.selectedFilters = [];
+            this.selectedRanges = [];
+            this.searchQuery = '';
+        },
+        getProducts() {
+            fetchFilteredProducts({
+                filters: this.selectedFilters,
+                ranges: this.selectedRanges, 
+                search: this.searchQuery, 
+                page: this.page,
+                pageLimit: this.pageLimit
+            }).then(res => {
+                const [products, total] = res;
+                this.totalFound = total;
+                this.totalPages = Math.ceil(total / this.pageLimit);
+                this.products = [...products];
+            })
         }
     }
 }

@@ -1,33 +1,41 @@
 <template>
-    <aside class="sidebar">
-        <div class="sidebar__container">
-            <ul class="filter-list">
-                <DoubleSlider 
-                    v-for="range in ranges"
-                    :key="range.title"
-                    v-bind="range"/>
-                <FilterList 
-                    v-for="filter in filters"
-                    :list="filter.list"
-                    :key="filter.title"
-                    :title="filter.title"
-                    @changeCheckedStatus="onSelectedFiltersChange"/>
-            </ul>
-        </div>
-        <Button 
-            :color="'primary'" 
-            :size="'large'"
-            :className="'sidebar__button_large'">
-                CLEAR ALL FILTERS
-        </Button>
-    </aside>
+  <aside class="sidebar">
+    <div class="sidebar__container">
+      <ul class="filter-list">
+        <DoubleSlider 
+          v-for="range in ranges"
+          :key="range.title"
+          v-bind="range"
+          :selected="getSelectedRange(range.title, range.min, range.max)"
+          @range-changed="onRangeChange"
+        />
+        <FilterList 
+          v-for="filter in filters"
+          :key="filter.title"
+          :list="filter.list"
+          :title="filter.title"
+          :selected="selectedFilters"
+          @add-filter="onAddFilter"
+          @remove-filter="onRemoveFilter"
+        />
+      </ul>
+    </div>
+    <Button 
+      :color="'primary'" 
+      :size="'large'"
+      :class-name="'sidebar__button_large'"
+      @click="onResetClick"
+    >
+      CLEAR ALL FILTERS
+    </Button>
+  </aside>
 </template>
 
 <script>
 import Button from '../components/Button';
 import FilterList from '../components/FilterList';
 import DoubleSlider from '../components/DoubleSlider';
-import db from '../../server/db.json'
+import { fetchCategories, fetchBrands } from '../api'
 
 export default {
     components: {
@@ -35,43 +43,48 @@ export default {
         FilterList,
         DoubleSlider
     },
+    props: {
+        selectedFilters: {
+            type: Array,
+            default: () => []
+        },
+        selectedRanges: {
+            type: Array,
+            default: () => []
+        }
+    },
     data() {
         return {
             filters: {
                 'Category': {
                     title: "Category",
-                    list: [...this.prepareFilters(db.categories, 'category')]
+                    list: []
                 },
 
                 'Brand': {
                     title: "Brand",
-                    list: [...this.prepareFilters(db.brands, 'brand')]
+                    list: []
                 }
             },
             ranges: {
                 'Price': {
-                    title: "Price",
+                    title: 'Price',
                     min: 0,
                     max: 85000,
                     precision: 0,
-                    selected: {
-                        from: 0,
-                        to: 85000
-                    },
                     prefix:' UAH'
                 },
                 'Rating': {
                     title: 'Rating',
                     min: 0, 
                     max: 5,
-                    precision: 2,
-                    selected: {
-                        from: 0,
-                        to: 5
-                    }
+                    precision: 2
                 }
             }
         }
+    },
+    created() {
+        this.getFilters();
     },
     methods: {
         prepareFilters(arr, prefix) {
@@ -82,8 +95,32 @@ export default {
                 }
             });
         },
-        onSelectedFiltersChange() {
-            console.log('hello');
+        getSelectedRange(title, min, max) {
+            const range = this.selectedRanges.find(item => item.title === title);
+            return range?.selected? range.selected : {from: min, to: max};
+        },
+        onAddFilter(value) {
+            this.$emit('add-filter', value);
+        },
+        onRemoveFilter(value) {
+            this.$emit('remove-filter', value);
+        },
+        onRangeChange(title, selected) {
+            this.$emit('range-changed', title, selected);
+        },
+        onResetClick() {
+            this.$emit('reset-filters');
+        },
+        getFilters() {
+            fetchCategories()
+            .then(res => {
+                this.filters['Category'].list = [...res];
+            });
+
+            fetchBrands()
+            .then(res => {
+                this.filters['Brand'].list = [...res];
+            });
         }
     }
 }

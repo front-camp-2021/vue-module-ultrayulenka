@@ -1,15 +1,15 @@
 <template>
-    <button
-        :class="`
+  <button
+    :class="`
             button
             ${className}
             ${color? `button_${color}` : ''}
             ${size? `button_${size}` : ''}
         `"
-        :type="type"
-    >
-        <slot />
-    </button>
+    :type="type"
+  >
+    <slot />
+  </button>
 </template>
 
 <script>

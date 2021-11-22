@@ -1,19 +1,24 @@
 <template>
-    <li class="filter-item">
-        <h4 class="filter-item__title">{{title? title : 'No title'}}</h4>
-        <ul class="options-list">
-            <template v-if="list.length">
-                <FilterItem 
-                    v-for="item of list"
-                    :title="item.title"
-                    :key="item.value"
-                    :value="item.value"
-                    :checked="selected.includes(item.value)"
-                    @changeCheckedStatus="onSelectedFiltersChange"/>
-            </template>
-            <li v-else>No filters to show</li>
-        </ul>
-    </li>
+  <li class="filter-item">
+    <h4 class="filter-item__title">
+      {{ title? title : 'No title' }}
+    </h4>
+    <ul class="options-list">
+      <template v-if="list.length">
+        <FilterItem 
+          v-for="item of list"
+          :key="item.value"
+          :title="item.title"
+          :value="item.value"
+          :checked="selected.includes(item.value)"
+          @filter-clicked="onSelectedFiltersChange"
+        />
+      </template>
+      <li v-else>
+        No filters to show
+      </li>
+    </ul>
+  </li>
 </template>
 
 <script>
@@ -38,8 +43,8 @@ export default {
         }
     },
     methods: {
-        onSelectedFiltersChange(value) {
-            console.log(value);
+        onSelectedFiltersChange(value, isSelected) {
+            this.$emit(isSelected? 'remove-filter' : 'add-filter', value);
         }
     }
 }
