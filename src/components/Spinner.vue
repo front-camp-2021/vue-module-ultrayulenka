@@ -17,9 +17,6 @@
     </div>
 </template>
 
-<script>
-</script>
-
 <style lang="scss">
     @use "sass:map";
     @use "../assets/scss/variables" as *;

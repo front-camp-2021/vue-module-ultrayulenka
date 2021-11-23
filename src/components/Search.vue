@@ -6,7 +6,7 @@
         type="text" 
         placeholder="Search"
         :value="value"
-        @keyup="$emit('search-changed', $event.target.value)"
+        @keyup="onSearchChange($event.target.value)"
       >
       <button
         class="search-button"
@@ -23,14 +23,25 @@
 </template>
 
 <script>
-export default {
-    props: {
-        value: {
-            type: String,
-            default: ''
-        }
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+  props: {
+    value: {
+      type: String,
+      default: ''
     }
-}
+  },
+  setup(props, { emit }) {
+    function onSearchChange(value) {
+      emit('search-changed', value)
+    }
+
+    return {
+      onSearchChange
+    }
+  }
+})
 </script>
 
 <style lang="scss">

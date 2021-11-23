@@ -31,8 +31,9 @@
 import FilterItem from './FilterItem';
 import CustomBox from './CustomBox';
 import AsyncBoundry from './AsyncBoundry';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     components: {
         FilterItem,
         CustomBox,
@@ -64,12 +65,16 @@ export default {
             default: false
         }
     },
-    methods: {
-        onSelectedFiltersChange(value, isSelected) {
-            this.$emit(isSelected? 'remove-filter' : 'add-filter', value);
+    setup(props, { emit }) {
+        function onSelectedFiltersChange(value, isSelected) {
+            emit(isSelected? 'remove-filter' : 'add-filter', value);
+        }
+
+        return {
+            onSelectedFiltersChange
         }
     }
-}
+})
 </script>
 
 <style lang="scss">

@@ -1,7 +1,10 @@
 <script>
-import { h } from 'vue'
+import { 
+    h,
+    defineComponent
+} from 'vue'
 
-export default {
+export default defineComponent({
     props: {
         isInList: {
             type: Boolean,
@@ -15,5 +18,5 @@ export default {
             this.$slots.default()
         )
     }
-}
+})
 </script>

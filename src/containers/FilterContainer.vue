@@ -37,8 +37,12 @@ import Button from '../components/Button';
 import FilterList from '../components/FilterList';
 import DoubleSlider from '../components/DoubleSlider';
 import { fetchCategories, fetchBrands } from '../api'
+import { 
+    defineComponent,
+    reactive 
+} from 'vue';
 
-export default {
+export default defineComponent({
     components: {
         Button,
         FilterList,
@@ -54,88 +58,92 @@ export default {
             default: () => []
         }
     },
-    data() {
-        return {
-            filters: {
-                'Category': {
-                    title: "Category",
-                    list: [],
-                    loading: false,
-                    error: false
-                },
-
-                'Brand': {
-                    title: "Brand",
-                    list: [],
-                    loading: false,
-                    error: false
-                }
+    setup(props, { emit }) {
+        const filters = reactive({
+            'Category': {
+                title: "Category",
+                list: [],
+                loading: false,
+                error: false
             },
-            ranges: {
-                'Price': {
-                    title: 'Price',
-                    min: 0,
-                    max: 85000,
-                    precision: 0,
-                    prefix:' UAH'
-                },
-                'Rating': {
-                    title: 'Rating',
-                    min: 0, 
-                    max: 5,
-                    precision: 2
-                }
+
+            'Brand': {
+                title: "Brand",
+                list: [],
+                loading: false,
+                error: false
             }
-        }
-    },
-    created() {
-        this.getFilters();
-    },
-    methods: {
-        prepareFilters(arr, prefix) {
-            return arr.map(item => {
-                return {
-                    value: `${prefix}=` + item.toLowerCase().split(' ').join('_'),
-                    title: item
-                }
-            });
-        },
-        getSelectedRange(title, min, max) {
-            const range = this.selectedRanges.find(item => item.title === title);
-            return range?.selected? range.selected : {from: min, to: max};
-        },
-        onAddFilter(value) {
-            this.$emit('add-filter', value);
-        },
-        onRemoveFilter(value) {
-            this.$emit('remove-filter', value);
-        },
-        onRangeChange(title, selected) {
-            this.$emit('range-changed', title, selected);
-        },
-        onResetClick() {
-            this.$emit('reset-filters');
-        },
-        getFilters() {
-            this.getFilter(fetchCategories, 'Category');
-            this.getFilter(fetchBrands, 'Brand');
-        },
-        getFilter(fetch, title) {
-            this.filters[title].loading = true;
-            this.filters[title].error = false;
+        });
+        const ranges = reactive({
+            'Price': {
+                title: 'Price',
+                min: 0,
+                max: 85000,
+                precision: 0,
+                prefix:' UAH'
+            },
+            'Rating': {
+                title: 'Rating',
+                min: 0, 
+                max: 5,
+                precision: 2
+            }
+        });
+
+        getFilters();
+
+        function getFilter(fetch, title) {
+            filters[title].loading = true;
+            filters[title].error = false;
 
             fetch()
             .then(res => {
-                this.filters[title].list = [...res];
-                this.filters[title].loading = false;
+                filters[title].list = [...res];
+                filters[title].loading = false;
             })
             .catch(err => {
-                this.filters[title].loading = false;
-                this.filters[title].error = true;
+                filters[title].loading = false;
+                filters[title].error = true;
             })
         }
+
+        function getFilters() {
+            getFilter(fetchCategories, 'Category');
+            getFilter(fetchBrands, 'Brand');
+        }
+
+        function getSelectedRange(title, min, max) {
+            const range = props.selectedRanges.find(item => item.title === title);
+            return range?.selected? range.selected : {from: min, to: max};
+        }
+
+        function onAddFilter(value) {
+            emit('add-filter', value);
+        }
+
+        function onRemoveFilter(value) {
+            emit('remove-filter', value);
+        }
+
+        function onRangeChange(title, selected) {
+            emit('range-changed', title, selected);
+        }
+
+        function onResetClick() {
+            emit('reset-filters');
+        }
+
+        return {
+            filters,
+            ranges,
+            getSelectedRange,
+            onRangeChange,
+            onAddFilter,
+            onRemoveFilter,
+            onResetClick
+        }
     }
-}
+})
 </script>
 
 <style lang="scss">

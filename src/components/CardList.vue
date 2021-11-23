@@ -15,8 +15,9 @@
 
 <script>
 import Card from './Card'
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     components: {
         Card
     },
@@ -26,7 +27,7 @@ export default {
             default: () => []
         }
     }
-}
+})
 </script>
 
 <style lang="scss">

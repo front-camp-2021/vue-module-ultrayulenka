@@ -25,8 +25,14 @@ import Search from '../components/Search';
 import Pagination from '../components/Pagination';
 import AsyncBoundry from '../components/AsyncBoundry';
 import { fetchFilteredProducts } from '../api';
+import { 
+    defineComponent,
+    watch,
+    ref,
+    watchEffect 
+} from 'vue';
 
-export default {
+export default defineComponent({
     components: {
         CardList,
         Search,
@@ -47,77 +53,77 @@ export default {
             default: true
         }
     },
-    data() {
-        return {
-            products: [],
-            totalFound: 100,
-            searchQuery: '',
-            page: 1,
-            totalPages: 10,
-            pageLimit: 9,
-            loading: false,
-            error: false
-        }
-    },
-    computed: {
-        paramsChanged: function() {
-            return [...this.selectedFilters, ...this.selectedRanges];
-        }
-    },
-    watch: {
-        paramsChanged: function() {
-            this.page = 1;
-            this.getProducts();
-        },
-        page: function() {
-            this.getProducts();
-        },
-        searchQuery: function() {
-            this.page = 1;
-            this.getProducts();
-        }
-    },
-    created() {
-        this.getProducts();
-    },
-    methods: {
-        onSearchChange(value) {
-            if(value.trim()) {
-                this.searchQuery = value.trim();
-            } else {
-                this.searchQuery = '';
-            }
-        },
-        onPageChange(index) {
-            if(index > 0 && index <= this.totalPages) {
-                window.scrollTo(0,0);
-                this.page = index;
-            }
-        },
-        getProducts() {
-            this.loading = true;
-            this.error = false;
+    setup(props, { emit }) {
+        const products = ref([]);
+        const totalFound = ref(100);
+        const searchQuery = ref('');
+        const page = ref(1);
+        const totalPages = ref(10);
+        const pageLimit = ref(9);
+        const loading = ref(false);
+        const error = ref(false);
+
+        getProducts();
+
+        function getProducts() {
+            loading.value = true;
+            error.value = false;
 
             fetchFilteredProducts({
-                filters: this.selectedFilters,
-                ranges: this.selectedRanges, 
-                search: this.searchQuery, 
-                page: this.page,
-                pageLimit: this.pageLimit
+                filters: props.selectedFilters,
+                ranges: props.selectedRanges, 
+                search: searchQuery.value, 
+                page: page.value,
+                pageLimit: pageLimit.value
             }).then(res => {
-                const [products, total] = res;
-                this.$emit("products-count-changed", Number(total));
-                this.totalPages = Math.ceil(total / this.pageLimit);
-                this.products = [...products];
-                setTimeout(() => this.loading = false, 500);
+                const [array, total] = res;
+                emit("products-count-changed", Number(total));
+                totalPages.value = Math.ceil(total / pageLimit.value);
+                products.value = [...array];
+                setTimeout(() => loading.value = false, 500);
             })
             .catch(err => {
-                this.loading = false;
-                this.error = true;
+                loading.value = false;
+                error.value = true;
             })
         }
+
+        watch([props, searchQuery], (curr, prev) => {
+            page.value = 1;
+            getProducts();
+        });
+
+        watch(page, (curr, prev) => {
+            getProducts();
+        })
+
+        function onSearchChange(value) {
+            if(value.trim()) {
+                searchQuery.value = value.trim();
+            } else {
+                searchQuery.value = '';
+            }
+        }
+
+        function onPageChange(index) {
+            if(index > 0 && index <= totalPages.value) {
+                window.scrollTo(0,0);
+                page.value = index;
+            }
+        }
+
+        return {
+            products,
+            searchQuery,
+            page,
+            totalPages,
+            loading,
+            error,
+            onSearchChange,
+            onPageChange
+        }
     }
-}
+})
 </script>
 
 <style lang="scss">

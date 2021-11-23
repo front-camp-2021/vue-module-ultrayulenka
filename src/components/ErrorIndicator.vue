@@ -11,9 +11,6 @@
 
 </template>
 
-<script>
-</script>
-
 <style lang="scss">
     .error-container {
         width: 100%;

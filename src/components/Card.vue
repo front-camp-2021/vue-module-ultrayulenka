@@ -70,8 +70,9 @@
 <script>
 import Button from './Button';
 import CustomBox from './CustomBox';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     components: {
         Button,
         CustomBox
@@ -106,7 +107,7 @@ export default {
             default: false
         }
     }
-}
+})
 </script>
 
 <style lang="scss">

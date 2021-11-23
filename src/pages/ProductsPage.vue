@@ -29,8 +29,12 @@
 import ProductsPageHeader from '../components/ProductsPageHeader';
 import FilterContainer from '../containers/FilterContainer';
 import MainContainer from '../containers/MainContainer';
-
-import { fetchFilteredProducts } from '../api';
+import { 
+    defineComponent,
+    watch,
+    ref,
+    watchEffect 
+} from 'vue';
 
 export default {
     components: {
@@ -38,43 +42,56 @@ export default {
         FilterContainer,
         MainContainer
     },
-    data() {
-        return {
-            isSidebarOpen: false,
-            selectedFilters: [],
-            selectedRanges: [],
-            totalFound: 0
+    setup(props) {
+        const isSidebarOpen = ref(false);
+        const selectedFilters = ref([]);
+        const selectedRanges = ref([]);
+        const totalFound = ref(0);
+
+        function onSidebarShownClick() {
+            isSidebarOpen.value = !isSidebarOpen.value;
         }
-    },
-    methods: {
-        onSidebarShownClick() {
-            this.isSidebarOpen = !this.isSidebarOpen;
-        },
-        onAddFilter(value) {
-            this.selectedFilters.push(value);
-            console.log(this.selectedFilters);
-        },
-        onRemoveFilter(value) {
-            const index = this.selectedFilters.indexOf(value);
+
+        function onAddFilter(value) {
+            selectedFilters.value.push(value);
+        }
+
+        function onRemoveFilter(value) {
+            const index = selectedFilters.value.indexOf(value);
             if(index > -1) {
-                this.selectedFilters.splice(index, 1);
+                selectedFilters.value.splice(index, 1);
             }
-            console.log(this.selectedFilters);
-        },
-        onRangeChanged(title, selected) {
-            const index = this.selectedRanges.findIndex(range => range.title === title);
+        }
+
+        function onRangeChanged(title, selected) {
+            const index = selectedRanges.value.findIndex(range => range.title === title);
             if(index > -1) {
-                this.selectedRanges.splice(index, 1, {title, selected})
+                selectedRanges.value.splice(index, 1, {title, selected})
             } else {
-                this.selectedRanges.push({title, selected});
+                selectedRanges.value.push({title, selected});
             }
-        },
-        onTotalProductsChange(value) {
-            this.totalFound = value;
-        },
-        resetFilters() {
-            this.selectedFilters = [];
-            this.selectedRanges = [];
+        }
+
+        function onTotalProductsChange(value) {
+            totalFound.value = value;
+        }
+
+        function resetFilters() {
+            selectedFilters.value = [];
+            selectedRanges.value = [];
+        }
+
+        return {
+            isSidebarOpen,
+            selectedFilters,
+            selectedRanges,
+            totalFound,
+            onSidebarShownClick,
+            onRemoveFilter,
+            onAddFilter,
+            onRangeChanged,
+            resetFilters,
+            onTotalProductsChange
         }
     }
 }

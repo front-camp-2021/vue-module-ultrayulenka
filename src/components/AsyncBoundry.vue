@@ -9,8 +9,9 @@
 <script>
 import Spinner from './Spinner';
 import ErrorIndicator from './ErrorIndicator';
+import { defineComponent } from 'vue'
 
-export default {
+export default defineComponent({
     components: {
         Spinner,
         ErrorIndicator
@@ -25,5 +26,5 @@ export default {
             default: false
         }
     }
-}
+})
 </script>

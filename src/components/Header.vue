@@ -40,13 +40,14 @@
 <script>
 import Button from './Button';
 import Navigation from './Navigation'
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   components: {
     Button,
     Navigation
   }
-}
+})
 </script>
 
 <style lang="scss">

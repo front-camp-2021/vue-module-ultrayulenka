@@ -35,8 +35,9 @@
 
 <script>
 import Button from './Button';
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
   components: {
     Button
   },
@@ -50,12 +51,16 @@ export default {
         required: true
     }
   },
-  methods: {
-      onShowSidebarClick() {
-          this.$emit('changeSidebarOpenStatus');
-      }
+  setup(props, { emit }) {
+    function onShowSidebarClick() {
+      emit('changeSidebarOpenStatus');
+    }
+
+    return {
+      onShowSidebarClick
+    }
   }
-}
+})
 </script>
 
 <style lang="scss">

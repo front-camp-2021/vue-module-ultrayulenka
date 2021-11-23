@@ -34,7 +34,9 @@
 </template>
 
 <script>
-export default {
+import { defineComponent } from 'vue';
+
+export default defineComponent({
     props: {
         page: {
             type: Number,
@@ -45,22 +47,30 @@ export default {
             default: 0
         }
     },
-    methods: {
-        counter(i) {
+    setup(props, { emit }) {
+        function counter(i) {
             return new Array(i);
-        },
-        getClass(i) {
+        }
+
+        function getClass(i) {
             const base = 'page-navigation__item_';
-            const modificator = i === this.page - 1? 'current':
-                                i === this.page - 2? 'prev':
-                                i === this.page? 'next': '';
+            const modificator = i === props.page - 1? 'current':
+                                i === props.page - 2? 'prev':
+                                i === props.page? 'next': '';
             return modificator? base + modificator : ''; 
-        },
-        goToPage(index) {
-            this.$emit('page-changed', index);
+        }
+
+        function goToPage(index) {
+            emit('page-changed', index);
+        }
+
+        return {
+            counter,
+            getClass, 
+            goToPage
         }
     }
-}
+})
 </script>
 
 <style lang="scss">

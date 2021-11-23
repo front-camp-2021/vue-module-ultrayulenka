@@ -20,8 +20,9 @@
 </template>
 
 <script>
+import { defineComponent } from 'vue';
 
-export default {
+export default defineComponent({
     props: {
         title: {
             type: String,
@@ -40,12 +41,19 @@ export default {
             default: false
         }
     },
-    methods: {
-        onClick() {
-            this.$emit('filter-clicked', this.value, this.checked);
+    emits: [
+        'filter-clicked'
+    ],
+    setup(props, { emit }) {
+        function onClick() {
+            emit('filter-clicked', props.value, props.checked);
+        }
+
+        return {
+            onClick
         }
     }
-}
+})
 </script>
 
 <style lang="scss">
