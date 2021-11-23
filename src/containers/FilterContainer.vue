@@ -8,15 +8,16 @@
           v-bind="range"
           :selected="getSelectedRange(range.title, range.min, range.max)"
           @range-changed="onRangeChange"
+          :isInList="true"
         />
         <FilterList 
-          v-for="filter in filters"
-          :key="filter.title"
-          :list="filter.list"
-          :title="filter.title"
-          :selected="selectedFilters"
-          @add-filter="onAddFilter"
-          @remove-filter="onRemoveFilter"
+            v-for="filter in filters"
+            :key="filter.title"
+            v-bind="filter"
+            :selected="selectedFilters"
+            @add-filter="onAddFilter"
+            @remove-filter="onRemoveFilter"
+            :isInList="true"
         />
       </ul>
     </div>
@@ -58,12 +59,16 @@ export default {
             filters: {
                 'Category': {
                     title: "Category",
-                    list: []
+                    list: [],
+                    loading: false,
+                    error: false
                 },
 
                 'Brand': {
                     title: "Brand",
-                    list: []
+                    list: [],
+                    loading: false,
+                    error: false
                 }
             },
             ranges: {
@@ -112,15 +117,22 @@ export default {
             this.$emit('reset-filters');
         },
         getFilters() {
-            fetchCategories()
-            .then(res => {
-                this.filters['Category'].list = [...res];
-            });
+            this.getFilter(fetchCategories, 'Category');
+            this.getFilter(fetchBrands, 'Brand');
+        },
+        getFilter(fetch, title) {
+            this.filters[title].loading = true;
+            this.filters[title].error = false;
 
-            fetchBrands()
+            fetch()
             .then(res => {
-                this.filters['Brand'].list = [...res];
-            });
+                this.filters[title].list = [...res];
+                this.filters[title].loading = false;
+            })
+            .catch(err => {
+                this.filters[title].loading = false;
+                this.filters[title].error = true;
+            })
         }
     }
 }

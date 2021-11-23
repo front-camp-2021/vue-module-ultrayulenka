@@ -1,25 +1,26 @@
 <template>
-  <li class="options-list__item">
-    <div>
-      <input
-        :id="value"
-        class="options-list__input" 
-        type="checkbox"
-        :name="title"
-        :value="value"
-        :checked="checked"
-        :disabled="!value"
-        @change="onClick"
-      >
-      <label
-        class="options-list__label"
-        :for="value"
-      >{{ title? title : 'No title' }}</label>
-    </div>
-  </li>
+    <li class="options-list__item">
+        <div>
+        <input
+            :id="value"
+            class="options-list__input" 
+            type="checkbox"
+            :name="title"
+            :value="value"
+            :checked="checked"
+            :disabled="!value"
+            @change="onClick"
+        >
+        <label
+            class="options-list__label"
+            :for="value"
+        >{{ title? title : 'No title' }}</label>
+        </div>
+    </li>
 </template>
 
 <script>
+
 export default {
     props: {
         title: {
@@ -31,6 +32,10 @@ export default {
             default: ''
         },
         checked: {
+            type: Boolean,
+            default: false
+        },
+        isInList: {
             type: Boolean,
             default: false
         }

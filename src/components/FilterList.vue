@@ -1,32 +1,42 @@
 <template>
-  <li class="filter-item">
+  <CustomBox 
+    class="filter-item"
+    :isInList="isInList">
     <h4 class="filter-item__title">
       {{ title? title : 'No title' }}
     </h4>
-    <ul class="options-list">
-      <template v-if="list.length">
-        <FilterItem 
-          v-for="item of list"
-          :key="item.value"
-          :title="item.title"
-          :value="item.value"
-          :checked="selected.includes(item.value)"
-          @filter-clicked="onSelectedFiltersChange"
-        />
-      </template>
-      <li v-else>
-        No filters to show
-      </li>
-    </ul>
-  </li>
+    <AsyncBoundry
+        :loading="loading"
+        :error="error">
+        <ul class="options-list">
+            <template v-if="list.length">
+                <FilterItem 
+                v-for="item of list"
+                :key="item.value"
+                :title="item.title"
+                :value="item.value"
+                :checked="selected.includes(item.value)"
+                @filter-clicked="onSelectedFiltersChange"
+                />
+            </template>
+        <li v-else>
+            No filters to show
+        </li>
+        </ul>
+    </AsyncBoundry>
+  </CustomBox>
 </template>
 
 <script>
 import FilterItem from './FilterItem';
+import CustomBox from './CustomBox';
+import AsyncBoundry from './AsyncBoundry';
 
 export default {
     components: {
-        FilterItem
+        FilterItem,
+        CustomBox,
+        AsyncBoundry
     },
     props: {
         title: {
@@ -40,6 +50,18 @@ export default {
         selected: {
             type: Array,
             default: () => []
+        },
+        isInList: {
+            type: Boolean,
+            default: false
+        },
+        loading: {
+            type: Boolean,
+            default: false
+        },
+        error: {
+            type: Boolean,
+            default: false
         }
     },
     methods: {

@@ -7,6 +7,7 @@
         v-bind="product"
         :key="product.id"
         class="cards-list__item"
+        :isInList="true"
       />
     </template>
   </ul>

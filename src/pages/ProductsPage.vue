@@ -15,20 +15,12 @@
         @range-changed="onRangeChanged"
         @reset-filters="resetFilters"
       />
-      <div :class="isSidebarOpen? 'main' : 'main_full-width'">
-        <Search 
-          :value="searchQuery"
-          @search-changed="onSearchChange"
-        />
-        <CardList 
-          :products="products" 
-        />
-        <Pagination
-          :page="page"
-          :total-pages="totalPages"
-          @page-changed="onPageChange"
-        />
-      </div>
+      <MainContainer
+        :isFullWidth="!isSidebarOpen"
+        :selectedFilters="selectedFilters"
+        :selectedRanges="selectedRanges"
+        @products-count-changed="onTotalProductsChange"
+      />
     </div>
   </div>
 </template>
@@ -36,9 +28,7 @@
 <script>
 import ProductsPageHeader from '../components/ProductsPageHeader';
 import FilterContainer from '../containers/FilterContainer';
-import CardList from '../components/CardList';
-import Search from '../components/Search';
-import Pagination from '../components/Pagination';
+import MainContainer from '../containers/MainContainer';
 
 import { fetchFilteredProducts } from '../api';
 
@@ -46,43 +36,15 @@ export default {
     components: {
         ProductsPageHeader,
         FilterContainer,
-        CardList,
-        Search,
-        Pagination
+        MainContainer
     },
     data() {
         return {
             isSidebarOpen: false,
-            products: [],
-            totalFound: 100,
             selectedFilters: [],
             selectedRanges: [],
-            searchQuery: '',
-            page: 1,
-            totalPages: 10,
-            pageLimit: 9
+            totalFound: 0
         }
-    },
-    computed: {
-        paramsChanged: function() {
-            return [...this.selectedFilters, ...this.selectedRanges];
-        }
-    },
-    watch: {
-        paramsChanged: function() {
-            this.page = 1;
-            this.getProducts();
-        },
-        page: function() {
-            this.getProducts();
-        },
-        searchQuery: function() {
-            this.page = 1;
-            this.getProducts();
-        }
-    },
-    created() {
-        this.getProducts();
     },
     methods: {
         onSidebarShownClick() {
@@ -107,37 +69,12 @@ export default {
                 this.selectedRanges.push({title, selected});
             }
         },
-        onSearchChange(value) {
-            if(value.trim()) {
-                this.searchQuery = value.trim();
-            } else {
-                this.searchQuery = '';
-            }
-            console.log(this.searchQuery);
-        },
-        onPageChange(index) {
-            if(index > 0 && index <= this.totalPages) {
-                this.page = index;
-            }
+        onTotalProductsChange(value) {
+            this.totalFound = value;
         },
         resetFilters() {
             this.selectedFilters = [];
             this.selectedRanges = [];
-            this.searchQuery = '';
-        },
-        getProducts() {
-            fetchFilteredProducts({
-                filters: this.selectedFilters,
-                ranges: this.selectedRanges, 
-                search: this.searchQuery, 
-                page: this.page,
-                pageLimit: this.pageLimit
-            }).then(res => {
-                const [products, total] = res;
-                this.totalFound = total;
-                this.totalPages = Math.ceil(total / this.pageLimit);
-                this.products = [...products];
-            })
         }
     }
 }
@@ -157,33 +94,6 @@ export default {
 
         @include tablet {
             display: block;
-        }
-    }
-
-    .main {
-        width: 68%;
-
-        @include tablet {
-            width: 100%;
-        }
-    }
-
-    .main_full-width {
-        width: 100%;
-
-        .cards-list__item {
-            @include desktop {
-                flex: 0 0 32%;
-            }
-
-            @include tablet {
-                flex: 0 0 49%;
-            }
-
-            @include mobile {
-                flex: 0 0 100%;
-                margin: 0 auto;
-            }
         }
     }
 </style>

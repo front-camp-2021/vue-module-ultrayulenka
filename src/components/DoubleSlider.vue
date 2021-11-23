@@ -1,6 +1,7 @@
 <template>
-  <li 
+  <CustomBox 
     class="filter-item"
+    :isInList="isInList"
     @pointerup="onPointerUp"
     @pointermove="onMove($event)"
   >
@@ -34,11 +35,16 @@
       </div>
       <span data-element="to">{{ `${selected.to} ${prefix}` }}</span>
     </div>
-  </li>
+  </CustomBox>
 </template>
 
 <script>
+import CustomBox from './CustomBox';
+
 export default {
+    components: {
+      CustomBox
+    },
     props: {
         title: {
             type: String,
@@ -68,6 +74,10 @@ export default {
         precision: {
             type: Number,
             default: 0
+        },
+        isInList: {
+          type: Boolean,
+          default: false
         }
     },
     data() {
