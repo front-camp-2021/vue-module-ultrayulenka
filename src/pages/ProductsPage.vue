@@ -2,24 +2,15 @@
   <div>
     <ProductsPageHeader 
       :is-sidebar-open="isSidebarOpen"
-      :total-products="totalFound"
+      :total-products="pagination.total"
       @changeSidebarOpenStatus="onSidebarShownClick"
     />
     <div class="content">
       <FilterContainer 
         v-if="isSidebarOpen"
-        :selected-filters="selectedFilters"
-        :selected-ranges="selectedRanges"
-        @add-filter="onAddFilter"
-        @remove-filter="onRemoveFilter"
-        @range-changed="onRangeChanged"
-        @reset-filters="resetFilters"
       />
       <MainContainer
         :isFullWidth="!isSidebarOpen"
-        :selectedFilters="selectedFilters"
-        :selectedRanges="selectedRanges"
-        @products-count-changed="onTotalProductsChange"
       />
     </div>
   </div>
@@ -29,11 +20,12 @@
 import ProductsPageHeader from '../components/ProductsPageHeader';
 import FilterContainer from '../containers/FilterContainer';
 import MainContainer from '../containers/MainContainer';
+import { useParams } from '../composables/params';
+import { usePagination } from '../composables/pagination';
 import { 
     defineComponent,
-    watch,
     ref,
-    watchEffect 
+    provide 
 } from 'vue';
 
 export default {
@@ -44,53 +36,56 @@ export default {
     },
     setup(props) {
         const isSidebarOpen = ref(false);
-        const selectedFilters = ref([]);
-        const selectedRanges = ref([]);
-        const totalFound = ref(0);
+        const {
+            state: pagination,
+            changePage,
+            changeTotal
+        } = usePagination();
+
+        const {
+            state: params,
+            changeSelectedRange,
+            addFilter,
+            removeFilter,
+            changeSearchQuery,
+            resetFilters,
+            getSelectedRange
+        } = useParams();
+
+        provide(
+            'params',
+            {
+                params,
+                changeSelectedRange,
+                addFilter,
+                removeFilter,
+                changeSearchQuery,
+                resetFilters,
+                getSelectedRange
+            }
+        );
+
+        provide(
+            'pagination',
+            {
+                pagination,
+                changePage,
+                changeTotal
+            }
+        )
 
         function onSidebarShownClick() {
             isSidebarOpen.value = !isSidebarOpen.value;
-        }
-
-        function onAddFilter(value) {
-            selectedFilters.value.push(value);
-        }
-
-        function onRemoveFilter(value) {
-            const index = selectedFilters.value.indexOf(value);
-            if(index > -1) {
-                selectedFilters.value.splice(index, 1);
-            }
-        }
-
-        function onRangeChanged(title, selected) {
-            const index = selectedRanges.value.findIndex(range => range.title === title);
-            if(index > -1) {
-                selectedRanges.value.splice(index, 1, {title, selected})
-            } else {
-                selectedRanges.value.push({title, selected});
-            }
         }
 
         function onTotalProductsChange(value) {
             totalFound.value = value;
         }
 
-        function resetFilters() {
-            selectedFilters.value = [];
-            selectedRanges.value = [];
-        }
-
         return {
             isSidebarOpen,
-            selectedFilters,
-            selectedRanges,
-            totalFound,
+            pagination,
             onSidebarShownClick,
-            onRemoveFilter,
-            onAddFilter,
-            onRangeChanged,
-            resetFilters,
             onTotalProductsChange
         }
     }

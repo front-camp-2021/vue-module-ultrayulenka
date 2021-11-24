@@ -5,9 +5,14 @@
       <Card 
         v-for="product in products"
         v-bind="product"
+        :inWishlist="isInWishlist(product.id)"
+        :cartQuantity="getCartQuantity(product.id)"
         :key="product.id"
         class="cards-list__item"
         :isInList="true"
+        @wishlist-button-clicked="onWishlistBtnClick"
+        @add-to-cart="onAddToCart"
+        @change-quantity="onChangeQuantity"
       />
     </template>
   </ul>
@@ -25,6 +30,44 @@ export default defineComponent({
         products: {
             type: Array,
             default: () => []
+        },
+        wishlistIds: {
+            type: Array,
+            default: () => []
+        },
+        cart: {
+            type: Array,
+            default: () => []
+        }
+    },
+    setup(props, { emit }) {
+        function isInWishlist(id) {
+            return props.wishlistIds.includes(id);
+        }
+
+        function getCartQuantity(id) {
+            const product = props.cart.find(item => item.id === id);
+            return product? product.quantity : 0;
+        }
+
+        function onWishlistBtnClick(product) {
+            emit('update-wishlist', product);
+        }
+
+        function onAddToCart(product) {
+            emit('add-to-cart', product);
+        }
+
+        function onChangeQuantity(id, quantity) {
+            emit('change-cart-quantity', id, quantity);
+        }
+
+        return {
+            isInWishlist,
+            getCartQuantity,
+            onWishlistBtnClick,
+            onAddToCart,
+            onChangeQuantity
         }
     }
 })

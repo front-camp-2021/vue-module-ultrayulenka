@@ -8,15 +8,35 @@
 <script>
 import Layout from './components/Layout';
 import Header from './components/Header';
-import ProductsPage from './pages/ProductsPage'
+import ProductsPage from './pages/ProductsPage';
+import { useWishlist } from './composables/wishlist';
+import { useCart } from './composables/cart';
+import { 
+  defineComponent,
+  provide 
+} from 'vue';
 
-export default {
+export default defineComponent({
   components: {
     Layout,
     Header,
     ProductsPage
+  },
+  setup() {
+    provide(
+      'wishlist',
+      {
+        ...useWishlist()
+      }
+    );
+    provide(
+      'cart',
+      {
+        ...useCart()
+      }
+    );
   }
-}
+})
 </script>
 
 <style lang="scss">

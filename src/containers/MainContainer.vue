@@ -1,26 +1,27 @@
 <template>
   <div :class="isFullWidth? 'main_full-width' : 'main'">
     <Search 
-        :value="searchQuery"
-        @search-changed="onSearchChange"
+        :value="params.search"
+        @search-changed="changeSearchQuery"
     />
     <AsyncBoundry
         :loading="loading"
         :error="error">
-        <CardList 
-        :products="products" />
+        <ProductContainer
+        :products="products"
+        />
     </AsyncBoundry>
     <Pagination
-        :page="page"
-        :total-pages="totalPages"
-        @page-changed="onPageChange"
+        :page="pagination.page"
+        :total-pages="pagination.totalPages"
+        @page-changed="changePage"
         v-if="!loading && !error"
     />
     </div>
 </template>
 
 <script>
-import CardList from '../components/CardList';
+import ProductContainer from './ProductContainer';
 import Search from '../components/Search';
 import Pagination from '../components/Pagination';
 import AsyncBoundry from '../components/AsyncBoundry';
@@ -29,12 +30,13 @@ import {
     defineComponent,
     watch,
     ref,
-    watchEffect 
+    watchEffect,
+    inject 
 } from 'vue';
 
 export default defineComponent({
     components: {
-        CardList,
+        ProductContainer,
         Search,
         Pagination,
         AsyncBoundry
@@ -55,13 +57,19 @@ export default defineComponent({
     },
     setup(props, { emit }) {
         const products = ref([]);
-        const totalFound = ref(100);
-        const searchQuery = ref('');
-        const page = ref(1);
-        const totalPages = ref(10);
-        const pageLimit = ref(9);
         const loading = ref(false);
         const error = ref(false);
+
+        const {
+            params,
+            changeSearchQuery
+        } = inject('params');
+
+        const {
+            pagination,
+            changePage,
+            changeTotal
+        } = inject('pagination');
 
         getProducts();
 
@@ -70,15 +78,14 @@ export default defineComponent({
             error.value = false;
 
             fetchFilteredProducts({
-                filters: props.selectedFilters,
-                ranges: props.selectedRanges, 
-                search: searchQuery.value, 
-                page: page.value,
-                pageLimit: pageLimit.value
+                filters: params.selectedFilters,
+                ranges: params.selectedRanges, 
+                search: params.search, 
+                page: pagination.page,
+                pageLimit: pagination.pageLimit
             }).then(res => {
                 const [array, total] = res;
-                emit("products-count-changed", Number(total));
-                totalPages.value = Math.ceil(total / pageLimit.value);
+                changeTotal(Number(total));
                 products.value = [...array];
                 setTimeout(() => loading.value = false, 500);
             })
@@ -88,39 +95,24 @@ export default defineComponent({
             })
         }
 
-        watch([props, searchQuery], (curr, prev) => {
-            page.value = 1;
+        watch(params, (curr, prev) => {
+            changePage(1);
             getProducts();
         });
 
-        watch(page, (curr, prev) => {
+        watch(pagination, (curr, prev) => {
+            window.scrollTo(0,0);
             getProducts();
         })
 
-        function onSearchChange(value) {
-            if(value.trim()) {
-                searchQuery.value = value.trim();
-            } else {
-                searchQuery.value = '';
-            }
-        }
-
-        function onPageChange(index) {
-            if(index > 0 && index <= totalPages.value) {
-                window.scrollTo(0,0);
-                page.value = index;
-            }
-        }
-
         return {
             products,
-            searchQuery,
-            page,
-            totalPages,
+            params,
+            pagination,
             loading,
             error,
-            onSearchChange,
-            onPageChange
+            changeSearchQuery,
+            changePage
         }
     }
 })

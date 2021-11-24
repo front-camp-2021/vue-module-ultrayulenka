@@ -7,16 +7,16 @@
           :key="range.title"
           v-bind="range"
           :selected="getSelectedRange(range.title, range.min, range.max)"
-          @range-changed="onRangeChange"
+          @range-changed="changeSelectedRange"
           :isInList="true"
         />
         <FilterList 
             v-for="filter in filters"
             :key="filter.title"
             v-bind="filter"
-            :selected="selectedFilters"
-            @add-filter="onAddFilter"
-            @remove-filter="onRemoveFilter"
+            :selected="params.selectedFilters"
+            @add-filter="addFilter"
+            @remove-filter="removeFilter"
             :isInList="true"
         />
       </ul>
@@ -25,7 +25,7 @@
       :color="'primary'" 
       :size="'large'"
       :class-name="'sidebar__button_large'"
-      @click="onResetClick"
+      @click="resetFilters"
     >
       CLEAR ALL FILTERS
     </Button>
@@ -39,7 +39,8 @@ import DoubleSlider from '../components/DoubleSlider';
 import { fetchCategories, fetchBrands } from '../api'
 import { 
     defineComponent,
-    reactive 
+    reactive,
+    inject 
 } from 'vue';
 
 export default defineComponent({
@@ -47,16 +48,6 @@ export default defineComponent({
         Button,
         FilterList,
         DoubleSlider
-    },
-    props: {
-        selectedFilters: {
-            type: Array,
-            default: () => []
-        },
-        selectedRanges: {
-            type: Array,
-            default: () => []
-        }
     },
     setup(props, { emit }) {
         const filters = reactive({
@@ -92,6 +83,15 @@ export default defineComponent({
 
         getFilters();
 
+        const {
+            params,
+            changeSelectedRange,
+            addFilter,
+            removeFilter,
+            resetFilters,
+            getSelectedRange
+        } = inject('params');
+
         function getFilter(fetch, title) {
             filters[title].loading = true;
             filters[title].error = false;
@@ -112,35 +112,15 @@ export default defineComponent({
             getFilter(fetchBrands, 'Brand');
         }
 
-        function getSelectedRange(title, min, max) {
-            const range = props.selectedRanges.find(item => item.title === title);
-            return range?.selected? range.selected : {from: min, to: max};
-        }
-
-        function onAddFilter(value) {
-            emit('add-filter', value);
-        }
-
-        function onRemoveFilter(value) {
-            emit('remove-filter', value);
-        }
-
-        function onRangeChange(title, selected) {
-            emit('range-changed', title, selected);
-        }
-
-        function onResetClick() {
-            emit('reset-filters');
-        }
-
         return {
             filters,
             ranges,
+            params,
             getSelectedRange,
-            onRangeChange,
-            onAddFilter,
-            onRemoveFilter,
-            onResetClick
+            addFilter,
+            removeFilter,
+            resetFilters,
+            changeSelectedRange
         }
     }
 })
