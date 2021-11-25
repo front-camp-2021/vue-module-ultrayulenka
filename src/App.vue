@@ -1,7 +1,7 @@
 <template>
   <Layout>
     <Header />
-    <ProductsPage />
+    <router-view />
   </Layout>
 </template>
 
@@ -19,8 +19,7 @@ import {
 export default defineComponent({
   components: {
     Layout,
-    Header,
-    ProductsPage
+    Header
   },
   setup() {
     provide(
@@ -34,6 +33,10 @@ export default defineComponent({
       {
         ...useCart()
       }
+    );
+    provide(
+      'currency',
+      'UAH'
     );
   }
 })

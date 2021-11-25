@@ -3,8 +3,8 @@
     <div class="logo-container">
       <div class="logo-container__item">
         <div class="logo">
-          <a
-            href="#"
+          <router-link
+            to="/"
             class="link"
           > 
             <img
@@ -12,25 +12,27 @@
               src="../assets/images/logo.svg"
               alt=""
             >
-          </a>
+          </router-link>
         </div>
         <h1 class="title">
-          <a
-            href="#"
+          <router-link
+            to="/"
             class="link"
           >
             Online Store
-          </a>
+          </router-link>
         </h1>
       </div>
       <div class="logo-container__item">
-        <Button :size="'small'">
-          <img 
-            class="button__icon" 
-            src="../assets/images/shopping-bag-dark.svg"
-            alt="Visit cart page"
-          >
-        </Button>
+        <router-link to="/cart">
+          <Button :size="'small'">
+            <img 
+              class="button__icon" 
+              src="../assets/images/shopping-bag-dark.svg"
+              alt="Visit cart page"
+            >
+          </Button>
+        </router-link>
       </div>
     </div>
     <Navigation />

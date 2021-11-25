@@ -19,16 +19,18 @@
     </div>
     <div :class="`heading__products ${isSidebarOpen? 'heading__products_open' : 'heading__products_closed'}`">
       <span class="total">{{ totalProducts }} results found</span>
-      <Button 
-        :size="'small'"
-        :color="'primary'"
-      >
-        <img
-          class="button__icon"
-          src="../assets/images/heart-white.svg"
-          alt="Go to wishlist"
+      <router-link to="/wishlist">
+        <Button 
+          :size="'small'"
+          :color="'primary'"
         >
-      </Button>
+          <img
+            class="button__icon"
+            src="../assets/images/heart-white.svg"
+            alt="Go to wishlist"
+          >
+        </Button>
+      </router-link>
     </div>
   </div>
 </template>

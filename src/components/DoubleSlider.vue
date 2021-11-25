@@ -1,7 +1,7 @@
 <template>
   <CustomBox 
     class="filter-item"
-    :isInList="isInList"
+    :is-in-list="isInList"
     @pointerup="onPointerUp"
     @pointermove="onMove($event)"
   >
@@ -11,9 +11,9 @@
     <div class="range-slider">
       <span data-element="from">{{ `${selected.from} ${prefix}` }}</span>
       <div
+        ref="slider"
         class="range-slider__inner"
         data-element="slider"
-        ref="slider"
       >
         <span
           data-element="progress"

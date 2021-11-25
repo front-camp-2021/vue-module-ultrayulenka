@@ -1,17 +1,27 @@
 <template>
-    <div class="quantity-control">
-        <Button
-        :size="'small'"
-        @click="onRemoveClick">
-            <img class="button__icon" src="../assets/images/minus.svg">
-        </Button>
-        <p class="quantity-control__count">{{quantity}}</p>
-        <Button
-        :size="'small'"
-        @click="onAddClick">
-            <img class="button__icon" src="../assets/images/plus.svg">
-        </Button>
-    </div>
+  <div class="quantity-control">
+    <Button
+      :size="'small'"
+      @click="onRemoveClick"
+    >
+      <img
+        class="button__icon"
+        src="../assets/images/minus.svg"
+      >
+    </Button>
+    <p class="quantity-control__count">
+      {{ quantity }}
+    </p>
+    <Button
+      :size="'small'"
+      @click="onAddClick"
+    >
+      <img
+        class="button__icon"
+        src="../assets/images/plus.svg"
+      >
+    </Button>
+  </div>
 </template>
 
 <script>

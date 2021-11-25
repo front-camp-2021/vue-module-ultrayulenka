@@ -1,9 +1,9 @@
 <template>
-    <div>
-        <ErrorIndicator v-if="error"/>
-        <Spinner v-else-if="loading"/>
-        <slot v-else/>
-    </div>
+  <div>
+    <ErrorIndicator v-if="error" />
+    <Spinner v-else-if="loading" />
+    <slot v-else />
+  </div>
 </template>
 
 <script>

@@ -1,7 +1,7 @@
 <template>
   <nav class="nav">
-    <a
-      href="#"
+    <router-link
+      to="/"
       class="nav__link"
     >
       <div class="home-icon">
@@ -27,24 +27,61 @@
             stroke-linejoin="round"
           />
         </svg>  
-      </div>  
-    </a>
-    <div class="arrows arrows_right" />
-    <a
-      href="#"
-      class="nav__link"
+      </div>
+    </router-link>
+    <div
+      v-if="!isCurrent('/')"
+      class="arrows arrows_right"
+    />
+    <div
+      v-for="(link, index) of getLinks()"
+      :key="link"
+      class="link-container"
     >
-      eCommerce
-    </a>
-    <div class="arrows arrows_right" />
-    <a
-      href="#"
-      class="nav__link nav__link_current"
-    >
-      Electronics
-    </a>
+      <router-link 
+        :class="`nav__link ${isCurrent(link)? 'nav__link_current': ''}`"
+        :to="getRouteLink(index)"
+      >
+        {{ link.charAt(0).toUpperCase() + link.slice(1) }}
+      </router-link>
+      <div
+        v-if="!isCurrent(link)"
+        class="arrows arrows_right"
+      />
+    </div>
   </nav>
 </template>
+
+<script>
+import { 
+  defineComponent,
+  computed 
+} from 'vue';
+import { useRoute } from 'vue-router';
+
+export default defineComponent({
+  setup() {
+    const route = useRoute();
+    function getLinks() {
+      return route.path.split('/').filter(value => value);
+    }
+
+    function getRouteLink(index) {
+      return '/' + getLinks().slice(0, index + 1).join('/');
+    }
+
+    function isCurrent(link) {
+      return route.path.endsWith(link);
+    }
+
+    return {
+      getLinks,
+      getRouteLink,
+      isCurrent
+    }
+  }
+})
+</script>
 
 <style lang="scss">
     @use "../assets/scss/arrows" as *;
@@ -75,6 +112,11 @@
                 margin: 0 5px;
             }
         }
+    }
+
+    .link-container {
+      display: flex;
+      padding-left: 10px;
     }
 
     .home-icon {

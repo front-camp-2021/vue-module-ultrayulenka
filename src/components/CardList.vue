@@ -1,15 +1,16 @@
 <template>
-  <ul className="cards-list">
+  <ul class="cards-list">
     {{ !products.length? 'No producst found' : '' }}
     <template v-if="products.length">
       <Card 
         v-for="product in products"
         v-bind="product"
-        :inWishlist="isInWishlist(product.id)"
-        :cartQuantity="getCartQuantity(product.id)"
         :key="product.id"
+        :in-wishlist="isInWishlist(product.id)"
+        :cart-quantity="getCartQuantity(product.id)"
+        :currency="currency"
         class="cards-list__item"
-        :isInList="true"
+        :is-in-list="true"
         @wishlist-button-clicked="onWishlistBtnClick"
         @add-to-cart="onAddToCart"
         @change-quantity="onChangeQuantity"
@@ -30,6 +31,10 @@ export default defineComponent({
         products: {
             type: Array,
             default: () => []
+        },
+        currency: {
+            type: String,
+            default: ''
         },
         wishlistIds: {
             type: Array,

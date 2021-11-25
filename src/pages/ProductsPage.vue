@@ -10,7 +10,7 @@
         v-if="isSidebarOpen"
       />
       <MainContainer
-        :isFullWidth="!isSidebarOpen"
+        :is-full-width="!isSidebarOpen"
       />
     </div>
   </div>

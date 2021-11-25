@@ -1,28 +1,30 @@
 <template>
   <CustomBox 
     class="filter-item"
-    :isInList="isInList">
+    :is-in-list="isInList"
+  >
     <h4 class="filter-item__title">
       {{ title? title : 'No title' }}
     </h4>
     <AsyncBoundry
-        :loading="loading"
-        :error="error">
-        <ul class="options-list">
-            <template v-if="list.length">
-                <FilterItem 
-                v-for="item of list"
-                :key="item.value"
-                :title="item.title"
-                :value="item.value"
-                :checked="selected.includes(item.value)"
-                @filter-clicked="onSelectedFiltersChange"
-                />
-            </template>
+      :loading="loading"
+      :error="error"
+    >
+      <ul class="options-list">
+        <template v-if="list.length">
+          <FilterItem 
+            v-for="item of list"
+            :key="item.value"
+            :title="item.title"
+            :value="item.value"
+            :checked="selected.includes(item.value)"
+            @filter-clicked="onSelectedFiltersChange"
+          />
+        </template>
         <li v-else>
-            No filters to show
+          No filters to show
         </li>
-        </ul>
+      </ul>
     </AsyncBoundry>
   </CustomBox>
 </template>

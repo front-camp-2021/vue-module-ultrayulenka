@@ -1,23 +1,24 @@
 <template>
   <div :class="isFullWidth? 'main_full-width' : 'main'">
     <Search 
-        :value="params.search"
-        @search-changed="changeSearchQuery"
+      :value="params.search"
+      @search-changed="changeSearchQuery"
     />
     <AsyncBoundry
-        :loading="loading"
-        :error="error">
-        <ProductContainer
+      :loading="loading"
+      :error="error"
+    >
+      <ProductContainer
         :products="products"
-        />
+      />
     </AsyncBoundry>
     <Pagination
-        :page="pagination.page"
-        :total-pages="pagination.totalPages"
-        @page-changed="changePage"
-        v-if="!loading && !error"
+      v-if="!loading && !error"
+      :page="pagination.page"
+      :total-pages="pagination.totalPages"
+      @page-changed="changePage"
     />
-    </div>
+  </div>
 </template>
 
 <script>

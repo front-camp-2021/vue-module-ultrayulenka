@@ -21,7 +21,6 @@ export function useCart() {
     }
 
     function removeFromCart(id) {
-        state.products = [];
         const index = state.products.findIndex(item => item.id === id);
         if(index >= 0) {
             state.products.splice(index, 1);

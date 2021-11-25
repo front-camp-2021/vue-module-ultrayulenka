@@ -1,11 +1,13 @@
 <template>
   <CardList 
     :products="products"
-    :wishlistIds="wishlistIds"
+    :currency="currency"
+    :wishlist-ids="wishlistIds"
     :cart="cartIds"
     @update-wishlist="changeWishlistStatus"
     @add-to-cart="addToCart"
-    @change-cart-quantity="changeQuantity" />
+    @change-cart-quantity="changeQuantity"
+  />
 </template>
 
 <script>
@@ -39,6 +41,8 @@ export default defineComponent({
             changeQuantity
         } = inject('cart');
 
+        const currency = inject('currency');
+
         const wishlistIds = computed(() => wishlist.products.map(item => item.id));
         const cartIds = computed(() => cart.products.map(item => {
             return {
@@ -52,7 +56,8 @@ export default defineComponent({
             changeWishlistStatus,
             cartIds,
             addToCart,
-            changeQuantity
+            changeQuantity,
+            currency
         }
     }
 })

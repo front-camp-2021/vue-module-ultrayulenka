@@ -1,82 +1,98 @@
 <template>
-    <CustomBox 
-        class="card"
-        :isInList="isInList">
-        <div class="card__inner">
-            <template v-if="images.length">
-            <div class="card__image">
-                <a
-                href="#"
-                class="card__link"
-                >
-                <img
-                    :src="images[0]"
-                    :alt="title"
-                >
-                </a>
-            </div>
-            </template>
-            <div class="card__content">
-            <div class="card__details">
-                <div class="rating">
-                <span class="rating__value">{{ rating }}</span>
-                <div class="rating__icon">
-                    <img
-                    class="rating__icon"
-                    src="../assets/images/star.svg"
-                    alt="star"
-                    >
-                </div>
-                </div>
-                <span class="card__price">{{ price }}</span>
-            </div>
-            <h2 class="card__title">
-                <a
-                href="#"
-                class="card__link"
-                >{{ title }}</a>
-            </h2>
-            <p class="card__description">
-                Redesigned from scratch and completely revised.
-            </p>
-            </div>
-        </div>
-        <div class="card__button-group">
-            <Button 
-            :class-name="'card__button'"
-            @click="onWishlistBtnClick"
-            >
-            <svg class="button__icon" width="20" height="17" viewBox="0 0 18 15" xmlns="http://www.w3.org/2000/svg"
-            :class="inWishlist? 'heart_filled' : 'heart'">
-            <g style="mix-blend-mode:color-burn">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M15.4479 2.14929C14.7031 1.41343 13.6926 1 12.6389 1C11.5853 1 10.5748 1.41343 9.82993 2.14929L9.06449 2.90512L8.29906 2.14929C6.74769 0.61741 4.23242 0.617411 2.68105 2.14929C1.12967 3.68118 1.12967 6.16485 2.68105 7.69674L3.44648 8.45256L9.06449 14L14.6825 8.45256L15.4479 7.69674C16.1932 6.96122 16.6119 5.96344 16.6119 4.92302C16.6119 3.88259 16.1932 2.88481 15.4479 2.14929Z" stroke="black" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            </g>
-            </svg>
-            <span class="button__text">wishlist</span>
-            </Button>
-
-            <Button
-            v-if="cartQuantity <= 0"
-            :class-name="'card__button'"
-            :color="'primary'"
-            @click="onAddToCartClick"
-            >
+  <CustomBox 
+    class="card"
+    :is-in-list="isInList"
+  >
+    <div class="card__inner">
+      <template v-if="images.length">
+        <div class="card__image">
+          <a
+            href="#"
+            class="card__link"
+          >
             <img
-                class="button__icon"
-                src="../assets/images/shopping-bag.svg"
-                alt="shopping bag"
+              :src="images[0]"
+              :alt="title"
             >
-            <span class="button__text">add to cart</span>
-            </Button>
-
-            <QuantityControl v-else
-            class="card__control"
-            :quantity="cartQuantity"
-            @add="increaseQuantity"
-            @remove="decreseQuantity"
-            />
+          </a>
         </div>
-    </CustomBox>
+      </template>
+      <div class="card__content">
+        <div class="card__details">
+          <div class="rating">
+            <span class="rating__value">{{ rating }}</span>
+            <div class="rating__icon">
+              <img
+                class="rating__icon"
+                src="../assets/images/star.svg"
+                alt="star"
+              >
+            </div>
+          </div>
+          <span class="card__price">{{ `${price} ${currency}` }}</span>
+        </div>
+        <h2 class="card__title">
+          <a
+            href="#"
+            class="card__link"
+          >{{ title }}</a>
+        </h2>
+        <p class="card__description">
+          Redesigned from scratch and completely revised.
+        </p>
+      </div>
+    </div>
+    <div class="card__button-group">
+      <Button 
+        :class-name="'card__button'"
+        @click="onWishlistBtnClick"
+      >
+        <svg
+          class="button__icon"
+          width="20"
+          height="17"
+          viewBox="0 0 18 15"
+          xmlns="http://www.w3.org/2000/svg"
+          :class="inWishlist? 'heart_filled' : 'heart'"
+        >
+          <g style="mix-blend-mode:color-burn">
+            <path
+              fill-rule="evenodd"
+              clip-rule="evenodd"
+              d="M15.4479 2.14929C14.7031 1.41343 13.6926 1 12.6389 1C11.5853 1 10.5748 1.41343 9.82993 2.14929L9.06449 2.90512L8.29906 2.14929C6.74769 0.61741 4.23242 0.617411 2.68105 2.14929C1.12967 3.68118 1.12967 6.16485 2.68105 7.69674L3.44648 8.45256L9.06449 14L14.6825 8.45256L15.4479 7.69674C16.1932 6.96122 16.6119 5.96344 16.6119 4.92302C16.6119 3.88259 16.1932 2.88481 15.4479 2.14929Z"
+              stroke="black"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </g>
+        </svg>
+        <span class="button__text">wishlist</span>
+      </Button>
+
+      <Button
+        v-if="cartQuantity <= 0"
+        :class-name="'card__button'"
+        :color="'primary'"
+        @click="onAddToCartClick"
+      >
+        <img
+          class="button__icon"
+          src="../assets/images/shopping-bag.svg"
+          alt="shopping bag"
+        >
+        <span class="button__text">add to cart</span>
+      </Button>
+
+      <QuantityControl
+        v-else
+        class="card__control"
+        :quantity="cartQuantity"
+        @add="increaseQuantity"
+        @remove="decreseQuantity"
+      />
+    </div>
+  </CustomBox>
 </template>
 
 <script>
@@ -114,6 +130,10 @@ export default defineComponent({
         price: {
             type: Number,
             default: 0
+        },
+        currency: {
+            type: String,
+            default: ''
         },
         inWishlist: {
             type: Boolean,

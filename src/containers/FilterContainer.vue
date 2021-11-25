@@ -7,17 +7,17 @@
           :key="range.title"
           v-bind="range"
           :selected="getSelectedRange(range.title, range.min, range.max)"
+          :is-in-list="true"
           @range-changed="changeSelectedRange"
-          :isInList="true"
         />
         <FilterList 
-            v-for="filter in filters"
-            :key="filter.title"
-            v-bind="filter"
-            :selected="params.selectedFilters"
-            @add-filter="addFilter"
-            @remove-filter="removeFilter"
-            :isInList="true"
+          v-for="filter in filters"
+          :key="filter.title"
+          v-bind="filter"
+          :selected="params.selectedFilters"
+          :is-in-list="true"
+          @add-filter="addFilter"
+          @remove-filter="removeFilter"
         />
       </ul>
     </div>
@@ -50,6 +50,17 @@ export default defineComponent({
         DoubleSlider
     },
     setup(props, { emit }) {
+        const {
+            params,
+            changeSelectedRange,
+            addFilter,
+            removeFilter,
+            resetFilters,
+            getSelectedRange
+        } = inject('params');
+
+        const currency = inject('currency');
+
         const filters = reactive({
             'Category': {
                 title: "Category",
@@ -71,7 +82,7 @@ export default defineComponent({
                 min: 0,
                 max: 85000,
                 precision: 0,
-                prefix:' UAH'
+                prefix: currency
             },
             'Rating': {
                 title: 'Rating',
@@ -82,15 +93,6 @@ export default defineComponent({
         });
 
         getFilters();
-
-        const {
-            params,
-            changeSelectedRange,
-            addFilter,
-            removeFilter,
-            resetFilters,
-            getSelectedRange
-        } = inject('params');
 
         function getFilter(fetch, title) {
             filters[title].loading = true;
@@ -120,7 +122,8 @@ export default defineComponent({
             addFilter,
             removeFilter,
             resetFilters,
-            changeSelectedRange
+            changeSelectedRange,
+            currency
         }
     }
 })
