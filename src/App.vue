@@ -1,30 +1,76 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view/>
+  <Layout>
+    <Header />
+    <router-view />
+  </Layout>
 </template>
 
-<style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import Layout from './components/Layout';
+import Header from './components/Header';
+import ProductsPage from './pages/ProductsPage';
+import { useWishlist } from './composables/wishlist';
+import { useCart } from './composables/cart';
+import { 
+  defineComponent,
+  provide 
+} from 'vue';
 
-#nav {
-  padding: 30px;
+export default defineComponent({
+  components: {
+    Layout,
+    Header
+  },
+  setup() {
+    provide(
+      'wishlist',
+      {
+        ...useWishlist()
+      }
+    );
+    provide(
+      'cart',
+      {
+        ...useCart()
+      }
+    );
+    provide(
+      'currency',
+      'UAH'
+    );
+  }
+})
+</script>
+
+<style lang="scss">
+  @import "./assets/scss/variables";
+
+  @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600&display=swap');
+
+  * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+  }
+
+  body {
+    background-color: $bg-color-app;
+    color: $font-color;
+    font-family: $font-stack;
+  }
 
   a {
-    font-weight: bold;
-    color: #2c3e50;
-
-    &.router-link-exact-active {
-      color: #42b983;
-    }
+      text-decoration: none;
+      color: inherit;
+      background-color: transparent;
   }
-}
+
+  button,
+  input {
+    font-family: inherit; 
+  }
+
+  input:focus{
+    outline: none;
+  }
 </style>
